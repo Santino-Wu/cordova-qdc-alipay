@@ -14,9 +14,9 @@ import com.alipay.sdk.app.PayTask;
 
 /**
  * 支付宝支付插件
- * 
+ *
  * @author NCIT
- * 
+ *
  */
 public class Alipay extends CordovaPlugin {
 	/** JS回调接口对象 */
@@ -35,7 +35,7 @@ public class Alipay extends CordovaPlugin {
 
 		boolean ret = false;
 
-		if ("payment".equalsIgnoreCase(action)) {
+		if ("pay".equalsIgnoreCase(action)) {
 			LOG.d(LOG_TAG, "Alipay#payment.start");
 
 			cbContext = callbackContext;
@@ -56,36 +56,12 @@ public class Alipay extends CordovaPlugin {
 				return ret;
 			}
 
-			JSONObject jsonObj = args.getJSONObject(0);
-
-			final String payInfo = jsonObj.getString("pay_info");
+			final String payInfo = args.getString(0);
 			if (payInfo == null || "".equals(payInfo)) {
 				LOG.e(LOG_TAG, "pay_info is empty", new NullPointerException());
 				ret = false;
 				PluginResult result = new PluginResult(
 						PluginResult.Status.ERROR, "pay_info is empty");
-				result.setKeepCallback(true);
-				cbContext.sendPluginResult(result);
-				return ret;
-			}
-
-			final String sign = jsonObj.getString("sign");
-			if (sign == null || "".equals(sign)) {
-				LOG.e(LOG_TAG, "sign is empty", new NullPointerException());
-				ret = false;
-				PluginResult result = new PluginResult(
-						PluginResult.Status.ERROR, "sign is empty");
-				result.setKeepCallback(true);
-				cbContext.sendPluginResult(result);
-				return ret;
-			}
-
-			if (!isSameSignature(payInfo, sign)) {
-				LOG.e(LOG_TAG, "pay_info sign failure.",
-						new IllegalStateException());
-				ret = false;
-				PluginResult result = new PluginResult(
-						PluginResult.Status.ERROR, "pay_info sign failure.");
 				result.setKeepCallback(true);
 				cbContext.sendPluginResult(result);
 				return ret;
@@ -148,42 +124,4 @@ public class Alipay extends CordovaPlugin {
 
 		return true;
 	}
-
-	/**
-	 * 判断签名是否一致
-	 * 
-	 * @param orign
-	 *            原始值
-	 * @param sign
-	 *            签名
-	 * @return 一致:true
-	 */
-	private boolean isSameSignature(String orign, String sign) {
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-				'A', 'B', 'C', 'D', 'E', 'F' };
-		try {
-			byte[] btInput = orign.getBytes("UTF-8");
-			// 获得MD5摘要算法的 MessageDigest 对象
-			MessageDigest mdInst = MessageDigest.getInstance("MD5");
-			// 使用指定的字节更新摘要
-			mdInst.update(btInput);
-			// 获得密文
-			byte[] md = mdInst.digest();
-			// 把密文转换成十六进制的字符串形式
-			int j = md.length;
-			char str[] = new char[j * 2];
-			int k = 0;
-			for (int i = 0; i < j; i++) {
-				byte byte0 = md[i];
-				str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-				str[k++] = hexDigits[byte0 & 0xf];
-			}
-
-			return new String(str).equals(sign);
-		} catch (Exception e) {
-			LOG.e(LOG_TAG, e.getMessage(), e);
-			return false;
-		}
-	}
-
 }

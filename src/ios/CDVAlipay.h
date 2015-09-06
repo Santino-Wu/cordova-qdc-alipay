@@ -16,5 +16,5 @@
 @property(nonatomic,strong)NSString *alipayScheme;
 @property(nonatomic,strong)NSString *currentCallbackId;
 
-- (void)payment:(CDVInvokedUrlCommand*)command;
+- (void)pay:(CDVInvokedUrlCommand*)command;
 @end

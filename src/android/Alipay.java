@@ -74,19 +74,6 @@ public class Alipay extends CordovaPlugin {
 					// 构造PayTask 对象
 					PayTask alipay = new PayTask(cordova.getActivity());
 
-					// 查询终端设备是否存在支付宝认证账户
-					boolean isExist = alipay.checkAccountIfExist();
-					if (!isExist) {
-						LOG.e(LOG_TAG, "alipay account is not exists",
-								new IllegalStateException());
-						PluginResult result = new PluginResult(
-								PluginResult.Status.ERROR,
-								"alipay account is not exists");
-						result.setKeepCallback(true);
-						cbContext.sendPluginResult(result);
-						return;
-					}
-
 					// 调用支付接口
 					String resultMsg = alipay.pay(payInfo);
 					LOG.i(LOG_TAG, ">>>>>>>>>>支付回调通知>>>>>>>>>>>");

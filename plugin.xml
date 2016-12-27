@@ -57,7 +57,7 @@
         </dict>
       </array>
     </config-file>
-    
+
     <config-file target="config.xml" parent="/*">
       <feature name="Alipay">
         <param name="ios-package" value="CDVAlipay" />
@@ -68,15 +68,16 @@
 
     <header-file src="src/ios/CDVAlipay.h" />
     <source-file src="src/ios/CDVAlipay.m" />
-    
+
     <resource-file src="libs/ios/AlipaySDK.bundle" />
     <!-- 手动copy framework bundle 文件 -->
-    
+
     <!-- afnetworking 依赖security.framework  -->
     <framework src="Security.framework"/>
     <framework src="SystemConfiguration.framework"/>
     <framework src="AssetsLibrary.framework"/>
-    
+    <framework src="CoreMotion.framework"/>
+
     <framework src="libs/ios/AlipaySDK.framework" custom="true" />
   </platform>
 
